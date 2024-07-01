@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className=" h-full flex flex-col items-center justify-center gap-y-4 ">
-      <div className="bg-white p-3 rounded-md">
+      <div className="p-3 rounded-md">
       <Image
         src="./next.svg"
         alt="My cool logo"
@@ -18,9 +18,9 @@ export default function Home() {
       <span className="text-4xl">👋</span>
       </div>
       <p>This is an example of an authentication crash.</p>
-      <Link href="/auth/register">
-        <Button className=" bg-gradient-to-tr from-blue-400 via-purple-400 to-green-500 shadow-lg text-black font-bold">
-          Get Started !
+      <Link href="/auth/login">
+        <Button className=" bg-gradient-to-bl from-cyan-500 to-lime-400  shadow-lg text-black/85 font-bold">
+          Get Started 🤝
         </Button>
       </Link>
    </div> 
