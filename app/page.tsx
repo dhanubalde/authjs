@@ -17,7 +17,7 @@ export default function Home() {
       <h1 className="text-4xl font-extrabold">Authentication Crash </h1>
       <span className="text-4xl">👋</span>
       </div>
-      <p>This is an example of an authentication crash.</p>
+      <p>This is an examples of an authentication crash.</p>
       <Link href="/auth/login">
         <Button className=" bg-gradient-to-bl from-cyan-500 to-lime-400  shadow-lg text-black/85 font-bold">
           Get Started 🤝
