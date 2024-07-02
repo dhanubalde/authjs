@@ -1,14 +1,66 @@
 
- "use client"
-import React from 'react'
+"use client"
+// 
+
+import { startTransition, useState, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import Social from './social'
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form"
+import {z} from "zod"
+
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from "../ui/form";
+import { RegisterSchema } from '@/schema'
+import FormError from '../form-error'
+import FormSuccess from '../form-success'
+import { toast } from '../ui/use-toast'
+
+
 
 
 const RegisterForm = () => {
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [isloading, StartTrnasition] = useTransition();
+
+  const form = useForm<z.infer<typeof RegisterSchema>>({
+    resolver: zodResolver(RegisterSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+    }
+  })
+
+
+
+  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+    setError("");
+    setSuccess("");
+    StartTrnasition(() => {
+      setSuccess("Processing...");
+    })
+  
+    console.log(values, toast({
+      title: "Registration Successful",
+      description: "You have successfully registered. You can now login.",
+      duration: 5000,
+    }));
+    
+  }
+
   return (
     <div className=' h-full flex flex-col items-center justify-center bg-gradient-to-bl from-cyan-500 to-lime-400'>
     <div className='p-8 px-5 flex flex-col max-w-md w-full mx-auto rounded-lg  border bg-white shadow-xl '>
@@ -19,65 +71,92 @@ const RegisterForm = () => {
       <p className="text-neutral-600 text-sm max-w-sm mt-1 dark:text-neutral-300 mb-6">
         Please provide all the necessary information
         </p>
-      
-        <form action="">
-          <div className=' space-y-4'>
-          <div className=' space-y-2'>
-          <Label className="block text-[12px] font-medium text-neutral-600 dark:text-neutral-300">
-            First Name
-          </Label>
-          <Input
-            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-            type="text"
-            name="firstname"
-            required
-              />
-                <Label className="block text-[12px] font-medium text-neutral-600 dark:text-neutral-300">
-            Last Name
-          </Label>
-          <Input
-            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-            type="text"
-            name="lastname"
-            required
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className=' flex flex-col justify-center space-y-2'>
+          <FormField
+          control={form.control}
+          name="firstName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>First Name</FormLabel>
+              <FormControl>
+                <Input placeholder="" {...field} />
+              </FormControl>
+              <FormMessage/>
+            </FormItem>
+          )}
             />
-          </div>
-        <div className=''>
-          <Label className="block text-[12px] font-medium text-neutral-600 dark:text-neutral-300">
-            Email address
-          </Label>
-          <Input
-            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-            type="email"
-            name="email"
-            placeholder='johndoe@gmail.com'
-            required
+          <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="" {...field}
+                      disabled={isloading}
+                    />
+                  </FormControl>
+                  <FormMessage/>
+                </FormItem>
+              )}
             />
-          </div>
-          <div className=''>
-          <Label className="block text-[12px] font-medium text-neutral-600 dark:text-neutral-300">
-            Password
-          </Label>
-          <Input
-            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-            type="password"
-            name="password"
-            placeholder='**********'
-            required
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="john@example.com"
+                      {...field}
+                      disabled={isloading}
+                      type='email'
+                    />
+                  </FormControl>
+                  <FormMessage/>
+                </FormItem>
+              )}
             />
-            </div>
-            <div className=''>
-              <Button className='w-full'> Sign up &rarr;</Button>
-            </div>
-            <p className="text-slate-500 text-[13px] max-w-sm mt-2 dark:text-neutral-300">
+            <FormField
+              control={form.control}
+              name='password'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="**********"
+                      {...field}
+                      disabled={isloading}
+                      type='password'
+                    />
+                  </FormControl>
+                  <FormMessage/>
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              disabled={isloading}
+            >
+          
+              Sign up
+            </Button>
+          </form>
+          
+        </Form>
+        <p className="text-slate-500 text-[13px] max-w-sm mt-2 dark:text-neutral-300">
           Already have an account? <Link href="/auth/login" className=' font-semibold ml-2️ underline'>login</Link>
             </p>
-          </div>
-          <Social/>
-        </form>
+        <Social/>
       </div>
     </div>
   )
 }
 
 export default RegisterForm
+
