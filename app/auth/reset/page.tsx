@@ -1,12 +1,12 @@
 
 "use client"
-import LoginForm from "@/components/auth/login-form"
+import ResetForm from '@/components/auth/reset-form'
 
 
 const page = () => {
   return (
     <>
-      <LoginForm/>
+    <ResetForm/>
     </>
   )
 }

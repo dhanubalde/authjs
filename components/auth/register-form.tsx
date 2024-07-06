@@ -25,20 +25,21 @@ import { RegisterSchema } from '@/schema'
 import FormError from '../form-error'
 import FormSuccess from '../form-success'
 import { toast } from '../ui/use-toast'
+import { register } from '@/actions/register'
+import { redirect } from 'next/navigation'
 
 
 
 
 const RegisterForm = () => {
-  const [success, setSuccess] = useState("");
-  const [error, setError] = useState("");
+  const [success, setSuccess] = useState<string | undefined>("");
+  const [error, setError] = useState<string | undefined>("");
   const [isloading, StartTrnasition] = useTransition();
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      name: "",
       email: "",
       password: "",
     }
@@ -50,15 +51,20 @@ const RegisterForm = () => {
     setError("");
     setSuccess("");
     StartTrnasition(() => {
-      setSuccess("Processing...");
+      register(values)
+        .then((data) => {
+          setError(data.error);
+          setSuccess(data.success);
+          if (data.success) { 
+            toast({
+              title: "Register Created Successfully",
+              description: `You can now login your Credentials`,
+              duration: 3000
+            })
+            redirect("/auth/login")
+          }
+        })
     })
-  
-    console.log(values, toast({
-      title: "Registration Successful",
-      description: "You have successfully registered. You can now login.",
-      duration: 5000,
-    }));
-    
   }
 
   return (
@@ -75,42 +81,29 @@ const RegisterForm = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className=' flex flex-col justify-center space-y-2'>
           <FormField
           control={form.control}
-          name="firstName"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>First Name</FormLabel>
+              <FormLabel className=' text-muted-foreground text-[12px]'>Full Name</FormLabel>
               <FormControl>
-                <Input placeholder="" {...field} />
+                <Input
+                  
+                  placeholder="johnDoe" {...field} />
               </FormControl>
               <FormMessage/>
             </FormItem>
           )}
             />
-          <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Last Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="" {...field}
-                      disabled={isloading}
-                    />
-                  </FormControl>
-                  <FormMessage/>
-                </FormItem>
-              )}
-            />
+          
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className=' text-muted-foreground text-[12px]'>Email</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="john@example.com"
+                      placeholder="johnDoe@example.com"
                       {...field}
                       disabled={isloading}
                       type='email'
@@ -125,7 +118,7 @@ const RegisterForm = () => {
               name='password'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className=' text-muted-foreground text-[12px]'>Password</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="**********"
@@ -138,7 +131,8 @@ const RegisterForm = () => {
                 </FormItem>
               )}
             />
-
+            {success && <FormSuccess message={success} />}
+            {error && <FormError message={error} />}
             <Button
               type="submit"
               disabled={isloading}

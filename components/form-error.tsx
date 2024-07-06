@@ -7,7 +7,8 @@ interface FormErrorProps {
 
 }
 
-const FormError = ({ message}: FormErrorProps) => {
+const FormError = ({ message }: FormErrorProps) => {
+  if (!message) return null;
   return (
     <div className=' bg-destructive/10 p-3 rounded-md flex items-center gap-x-3 text-sm text-destructive'>
       <ExclamationTriangleIcon className='h-4 w-4' />
