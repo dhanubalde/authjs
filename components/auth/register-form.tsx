@@ -26,7 +26,7 @@ import FormError from '../form-error'
 import FormSuccess from '../form-success'
 import { toast } from '../ui/use-toast'
 import { register } from '@/actions/register'
-import { redirect } from 'next/navigation'
+
 
 
 
@@ -61,7 +61,7 @@ const RegisterForm = () => {
               description: `You can now login your Credentials`,
               duration: 3000
             })
-            redirect("/auth/login")
+        
           }
         })
     })

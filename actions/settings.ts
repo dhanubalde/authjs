@@ -6,6 +6,9 @@ import { currentUser } from "@/lib/auth"
 import { SettingsSchema } from "@/schema"
 import { z} from "zod"
 import { db } from "@/lib/db"
+import { unstable_update } from "@/auth"
+
+
 export const settings = async (
   values: z.infer<typeof SettingsSchema>
 ) => {
@@ -35,7 +38,7 @@ export const settings = async (
   }
 
  
-  if (user && user.id) {
+
     const dbUser = await getUserById(user.id)
     
     if (values.password && values.newPassword && dbUser?.password) { 
@@ -57,20 +60,16 @@ export const settings = async (
       }
     });
 
-    // update({
-    //   user: {
-    //     name: updatedUser.name,
-    //     email: updatedUser.email,
-    //     isTwoFactorEnabled: updatedUser.isTwoFactorEnabled,
-    //     role: updatedUser.role,
-    //   }
+    unstable_update({
+      user: {
+        name: updatedUser.name,
+        email: updatedUser.email,
+        isTwoFactorEnabled: updatedUser.isTwoFactorEnabled,
+        role: updatedUser.role,
+      }
   
-    // })
-  }
-
- 
-
-
-  return {success: "Settings updated successfully"}
+    })
+    return {success: "Settings updated successfully"}
+  
 
 }

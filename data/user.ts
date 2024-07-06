@@ -17,7 +17,7 @@ export const getUserByEmail = async (
 } 
 
 export const getUserById = async (
-  id: string
+  id: string| undefined
 ) => { 
   try {
     const user = await db.user.findUnique({

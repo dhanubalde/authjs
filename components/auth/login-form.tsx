@@ -1,4 +1,6 @@
 "use client"
+
+
 import * as z from "zod"
 import { useSearchParams } from "next/navigation"
 import { useState, useTransition } from "react";
@@ -26,7 +28,7 @@ import { toast } from "../ui/use-toast";
 
 
 const LoginForm = () => {
-  const router = useRouter()
+  const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
   const urlError = searchParams.get("error") === "OAuthAccountNotLinked" ? `Email Already in use with different 'Providers'` : "";
@@ -53,27 +55,18 @@ const LoginForm = () => {
 
       login(values, callbackUrl)
         .then((data) => {
-          if (data.error) {
-            form.reset()
-            setError(data.error);
-          }
-          if (data.success) {
-            setSuccess(data.success)
-          }
-        }).catch((error) => { 
-          toast({
-            title: "Error",
-            description: "Something went wrong!",
-            variant: "destructive",
-            duration: 5000
-          });
-        })
-    });
-
-   }
+          form.reset()
+          setError(data?.error);
+          setSuccess(data?.success);
+          
+        });
+  
+    }
+    )
+  }
   return (
     <div className=' h-full flex flex-col items-center justify-center bg-gradient-to-bl from-cyan-500 to-lime-400'>
-    <div className='p-8 px-5 flex flex-col max-w-md w-full mx-auto rounded-lg  border bg-white shadow-xl '>
+    <div className='p-8 px-5 flex flex-col max-w-md w-full mx-auto rounded-lg  border bg-white shadow-2xl '>
        <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
           Welcome to Authentication Crash
           <span className='text-3xl ml-3'>👋</span>
